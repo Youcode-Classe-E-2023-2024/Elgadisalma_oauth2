@@ -25,3 +25,4 @@ Route::post('/users', [userController::class, 'addUser']);
 |--------------------------------------------------------------------------
 */
 Route::post('/roles', [roleController::class, 'addRole']);
+Route::delete('/roles/{id}', [roleController::class, 'deleteRole']);
