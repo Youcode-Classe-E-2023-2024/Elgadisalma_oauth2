@@ -32,4 +32,10 @@ class roleController extends Controller
         return response()->json(['message' => 'role deleted successfully'], 200);
     }
 
+    public function showRoles()
+    {
+        $roles = Role::all();
+        return response()->json(['message' => 'Liste des rôles', 'roles' => $roles], 200);
+    }
+
 }
