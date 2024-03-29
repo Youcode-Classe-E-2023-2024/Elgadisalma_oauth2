@@ -84,4 +84,44 @@ class userController extends Controller
         return response()->json(['message' => 'Password reset successfully'], 200);
     }
 
+
+    public function editUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email' . $id,
+            'password' => 'required',
+            'role_id' => 'required|integer',
+        ]);
+    
+        $user = User::find($id);
+    
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role_id = $request->role_id;
+    
+        $user->save();
+    
+        return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
+    }
+    
+
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+
+        if (!$user) {
+            return response()->json(['message' => 'user not found'], 404);
+        }
+
+        return response()->json(['message' => 'user deleted successfully'], 200);
+    }
+
+
 }
