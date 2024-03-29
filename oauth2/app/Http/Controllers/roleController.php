@@ -42,7 +42,6 @@ class roleController extends Controller
 */
     public function addRole(Request $request)
     {
-        $this->authorize('addRole', User::class);
         $request->validate([
             'name' => 'required',
         ]);
@@ -130,6 +129,7 @@ class roleController extends Controller
 */
     public function showRoles()
     {
+        $this->authorize('viewAny', Role::class);
         $roles = Role::all();
         return response()->json(['message' => 'Liste des rôles', 'roles' => $roles], 200);
     }
