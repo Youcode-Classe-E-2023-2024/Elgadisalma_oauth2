@@ -10,9 +10,9 @@ class UserTest extends TestCase
 
     public function testRegister()
     {
-    $existingUser = User::factory()->create([
-        'email' => 'test@example.com',
-    ]);
+    // $existingUser = User::factory()->create([
+    //     'email' => 'test@example.com',
+    // ]);
 
     $userData = [
         'name' => 'Test User',
