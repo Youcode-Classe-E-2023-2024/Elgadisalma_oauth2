@@ -36,9 +36,9 @@ Route::delete('/roles/{id}', [roleController::class, 'deleteRole']);
 | CRUD permissions
 |--------------------------------------------------------------------------
 */
-Route::get('/permissions', [permissionController::class, 'showPermissions']);
-Route::post('/permissions', [permissionController::class, 'addPermission']);
-Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
+// Route::get('/permissions', [permissionController::class, 'showPermissions']);
+// Route::post('/permissions', [permissionController::class, 'addPermission']);
+// Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
 
 
 /*
@@ -59,3 +59,7 @@ Route::namespace('Api')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
+
+Route::post('/forgotPassword', [UserController::class, 'forgotPassword']);
+    Route::get('/mot-de-passe/reinitialiser/{token}', [UserController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/mot-de-passe/reset/', [UserController::class, 'reset']);
