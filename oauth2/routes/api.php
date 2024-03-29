@@ -8,9 +8,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\permissionController;
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 Route::post('/users', [userController::class, 'addUser']);
+Route::put('/users/{id}', [userController::class, 'editUser']);
+Route::delete('/users/{id}', [userController::class, 'deleteUser']);
 
 
 
@@ -31,14 +33,16 @@ Route::post('/roles', [roleController::class, 'addRole']);
 Route::delete('/roles/{id}', [roleController::class, 'deleteRole']);
 
 
+
 /*
 |--------------------------------------------------------------------------
 | CRUD permissions
 |--------------------------------------------------------------------------
 */
-// Route::get('/permissions', [permissionController::class, 'showPermissions']);
-// Route::post('/permissions', [permissionController::class, 'addPermission']);
-// Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
+Route::get('/permissions', [permissionController::class, 'showPermissions']);
+Route::post('/permissions', [permissionController::class, 'addPermission']);
+Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
+
 
 
 /*
@@ -60,6 +64,13 @@ Route::namespace('Api')->group(function () {
     });
 });
 
+
+
+/*
+|--------------------------------------------------------------------------
+| Forgot-password
+|--------------------------------------------------------------------------
+*/
 Route::post('/forgotPassword', [UserController::class, 'forgotPassword']);
-    Route::get('/mot-de-passe/reinitialiser/{token}', [UserController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/mot-de-passe/reset/', [UserController::class, 'reset']);
+Route::get('/mot-de-passe/reinitialiser/{token}', [UserController::class, 'showResetForm'])->name('password.reset');
+Route::post('/mot-de-passe/reset/', [UserController::class, 'reset']);
