@@ -10,21 +10,23 @@ class UserTest extends TestCase
 
     public function testRegister()
     {
-    
+    $existingUser = User::factory()->create([
+        'email' => 'test@example.com',
+    ]);
 
     $userData = [
         'name' => 'Test User',
         'email' => 'test@example.com', 
         'password' => 'password',
-        'role_id' => 1,
+        'role_id' => '1',
     ];
 
     $response = $this->json('POST', '/api/auth/register', $userData);
 
     $response->assertStatus(201)
-    ->assertJson([
-    'message' => 'User registered successfully'
-    ]);
+                 ->assertJson([
+                     'message' => 'User registered successfully'
+                 ]);
 
         
     }
