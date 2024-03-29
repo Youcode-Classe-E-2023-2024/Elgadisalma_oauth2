@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class userController extends Controller
 {
     public function addUser(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
@@ -26,6 +32,56 @@ class userController extends Controller
 
         return response()->json(['message' => 'User added successfully', 'user' => $user], 201);
     
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user) {
+            return response()->json(['status' => 'failed', 'message' => 'User not found'], 404);
+        }
+    
+        $token = Str::random(60);
+        $existingToken = DB::table('password_resets')->where('email', $user->email)->first();
+    
+        if ($existingToken) {
+            DB::table('password_resets')->where('email', $user->email)->update(['token' => $token]);
+        } else {
+            DB::table('password_resets')->insert(['email' => $user->email, 'token' => $token]);
+        }
+    
+        Mail::send('forgot_password', ['token' => $token], function ($message) use ($user) {
+            $message->to($user->email);
+            $message->subject('Réinitialisation du mot de passe');
+        });
+    
+        return response()->json(['status' => 'success', 'message' => 'Password reset link sent to your email']);
+    }
+    
+    public function reset(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required'
+        ]);
+        
+            $updatePassword = DB::table('password_resets')
+            ->where([
+                'email' => $validatedData['email'],
+                'token' => $request->token
+            ])->first();
+        if (!$updatePassword) {
+            return response()->json(['error' => 'invalid_token'], 400);
+        }
+
+        User::where('email', $validatedData['email'])
+            ->update(['password' => Hash::make($validatedData['password'])]);
+
+        DB::table('password_resets')->where('email', $validatedData['email'])->delete();
+
+        return response()->json(['message' => 'Password reset successfully'], 200);
     }
 
 }
