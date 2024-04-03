@@ -30,39 +30,49 @@ Route::namespace('Api')->group(function () {
         Route::get('helloworld', [AuthController::class, 'index']);
         Route::post('logout', [AuthController::class, 'logout']);
 
+        Route::group([
+            'middleware' => 'checkRoles:api'
+        ], function () {
+
+            /*
+            |--------------------------------------------------------------------------
+            | CRUD users
+            |--------------------------------------------------------------------------
+            */
+            Route::post('/users', [userController::class, 'addUser']);
+            Route::put('/users/{id}', [userController::class, 'editUser']);
+            Route::delete('/users/{id}', [userController::class, 'deleteUser']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | CRUD roles
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/roles', [RoleController::class, 'showRoles']);
+            Route::post('/roles', [roleController::class, 'addRole']);
+            Route::delete('/roles/{id}', [roleController::class, 'deleteRole']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | CRUD permissions
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/permissions', [permissionController::class, 'showPermissions']);
+            Route::post('/permissions', [permissionController::class, 'addPermission']);
+            Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
+
+
+        });
+       
 
         /*
         |--------------------------------------------------------------------------
-        | CRUD users
-        |--------------------------------------------------------------------------
-        */
-        Route::post('/users', [userController::class, 'addUser']);
-        Route::put('/users/{id}', [userController::class, 'editUser']);
-        Route::delete('/users/{id}', [userController::class, 'deleteUser']);
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CRUD roles
+        | user role
         |--------------------------------------------------------------------------
         */
         Route::get('/roles', [RoleController::class, 'showRoles']);
-        Route::post('/roles', [roleController::class, 'addRole']);
-        Route::delete('/roles/{id}', [roleController::class, 'deleteRole']);
-
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | CRUD permissions
-        |--------------------------------------------------------------------------
-        */
         Route::get('/permissions', [permissionController::class, 'showPermissions']);
-        Route::post('/permissions', [permissionController::class, 'addPermission']);
-        Route::delete('/permissions/{id}', [permissionController::class, 'deletePermission']);
-
-
+       
 
     });
 });

@@ -105,8 +105,9 @@ class userController extends Controller
         $user->password = bcrypt($request->password);
         $user->role_id = $request->role_id;
     
-        $user->save();
-    
+
+        
+        
         return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
     }
     
